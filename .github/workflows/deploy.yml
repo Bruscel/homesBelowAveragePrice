@@ -34,14 +34,14 @@ jobs:
       - name: Deploy to Raspberry Pi
         run: |
           # Create the directory on the Raspberry Pi if it doesn't exist
-          ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP } "mkdir -p /home/pi/Documents/apps/client"
+          ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP }} "mkdir -p /home/pi/Documents/apps/client"
           # Copy the built Angular app files to the Raspberry Pi
-          scp -r ./dist/client/* pi@${{ secrets.RASPBERRY_PI_IP }:/home/pi/Documents/apps/client
+          scp -r ./dist/client/* pi@${{ secrets.RASPBERRY_PI_IP }}:/home/pi/Documents/apps/client
 
       - name: Start Angular app on Raspberry Pi
         run: |
           # SSH into Raspberry Pi and restart the server or start the app
-          ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP } << 'EOF'
+          ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP }} << 'EOF'
             # Navigate to the app directory
             cd /home/pi/Documents/apps/client
             # Start the app using Nginx or any command you use to run the app
