@@ -24,7 +24,7 @@ jobs:
           
       - name: Build the Angular app
         run: |
-          npm run build  # Run "ng build" script, as defined in your package.json
+          npm run build -- --configuration production  # Run "ng build --prod"
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
@@ -50,6 +50,6 @@ jobs:
             #sudo systemctl restart nginx  # Restart Nginx to serve the new version
 
             # Option 2: If you use Node.js directly (e.g., running with pm2)
-            sudo pm2 restart client || sudo pm2 start /home/pi/Documents/apps/client
-
+            sudo pm2 restart angular-ssr || pm2 start /home/pi/Documents/apps/client/server/main.server.mjs --node-args="--experimental-modules" --name angular-ssr
+            
           EOF
