@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Use the version of Node.js you want
+          node-version: '20'  # Use the version of Node.js you want
 
       - name: Install dependencies
         run: |
@@ -34,14 +34,14 @@ jobs:
       - name: Deploy to Raspberry Pi
         run: |
           # Create the directory on the Raspberry Pi if it doesn't exist
-          ssh -o StrictHostKeyChecking=no pi@192.168.0.19 "mkdir -p /home/pi/Documents/apps/client"
+          ssh -o StrictHostKeyChecking=no pi@73.125.222.195 "mkdir -p /home/pi/Documents/apps/client"
           # Copy the built Angular app files to the Raspberry Pi
-          scp -r ./dist/client/* pi@192.168.0.19:/home/pi/Documents/apps/client
+          scp -r ./dist/client/* pi@73.125.222.195:/home/pi/Documents/apps/client
 
       - name: Start Angular app on Raspberry Pi
         run: |
           # SSH into Raspberry Pi and restart the server or start the app
-          ssh -o StrictHostKeyChecking=no pi@192.168.0.19 << 'EOF'
+          ssh -o StrictHostKeyChecking=no pi@73.125.222.195 << 'EOF'
             # Navigate to the app directory
             cd /home/pi/Documents/apps/client
             # Start the app using Nginx or any command you use to run the app
