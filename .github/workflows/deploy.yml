@@ -1,0 +1,55 @@
+name: Deploy Angular app to Raspberry Pi
+
+on:
+  push:
+    branches:
+      - main  # Change this to your desired branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Use the version of Node.js you want
+
+      - name: Install dependencies
+        run: |
+          npm install
+          
+      - name: Build the Angular app
+        run: |
+          npm run build  # Run "ng build" script, as defined in your package.json
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.PI_SSH_KEY }}  # Store your private key in GitHub Secrets
+
+      - name: Deploy to Raspberry Pi
+        run: |
+          # Create the directory on the Raspberry Pi if it doesn't exist
+          ssh -o StrictHostKeyChecking=no pi@192.168.0.19 "mkdir -p /home/pi/Documents/apps/client"
+          # Copy the built Angular app files to the Raspberry Pi
+          scp -r ./dist/client/* pi@192.168.0.19:/home/pi/Documents/apps/client
+
+      - name: Start Angular app on Raspberry Pi
+        run: |
+          # SSH into Raspberry Pi and restart the server or start the app
+          ssh -o StrictHostKeyChecking=no pi@192.168.0.19 << 'EOF'
+            # Navigate to the app directory
+            cd /home/pi/Documents/apps/client
+            # Start the app using Nginx or any command you use to run the app
+
+            # Option 1: Using Nginx (assuming it's set up to serve your Angular app)
+            #sudo systemctl restart nginx  # Restart Nginx to serve the new version
+
+            # Option 2: If you use Node.js directly (e.g., running with pm2)
+            sudo pm2 restart client || sudo pm2 start /home/pi/Documents/apps/client
+
+          EOF
