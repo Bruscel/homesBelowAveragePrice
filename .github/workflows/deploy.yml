@@ -50,6 +50,6 @@ jobs:
             #sudo systemctl restart nginx  # Restart Nginx to serve the new version
 
             # Option 2: If you use Node.js directly (e.g., running with pm2)
-            sudo pm2 restart angular-ssr || pm2 start /home/pi/Documents/apps/client/server/main.server.mjs --node-args="--experimental-modules" --name angular-ssr
+            sudo pm2 restart angular-ssr || pm2 start /home/pi/Documents/apps/client/server/server.mjs --node-args="--experimental-modules" --name angular-ssr
             
           EOF
