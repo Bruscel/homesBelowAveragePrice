@@ -9,7 +9,7 @@ import { Item } from '../models/item.model';
 })
 export class DataService {
   //private apiUrl = 'https://localhost:7182/api/Items'; //Production API endpoint
-  private apiUrl = 'http://localhost:5000/api/Items'; //Development API endpoint
+  private apiUrl = 'http://192.168.0.19/api/Items'; //Development API endpoint
   
   private httpOptions = {
     headers: new HttpHeaders({
