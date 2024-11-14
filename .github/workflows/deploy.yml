@@ -37,7 +37,14 @@ jobs:
           ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP }} "mkdir -p /home/pi/Documents/apps/client"
           # Copy the built Angular app files to the Raspberry Pi
           scp -r ./dist/client/* pi@${{ secrets.RASPBERRY_PI_IP }}:/home/pi/Documents/apps/client
-
+          
+      - name: Stop or delete the existing Angular-SSR process (if running)
+        run: |
+          ssh -t pi@${{ secrets.RASPBERRY_PI_IP }} << 'EOF'
+            # Stop and delete the existing angular-ssr process, if running
+            pm2 stop angular-ssr || echo "No existing angular-ssr process found"
+            pm2 delete angular-ssr || echo "No existing angular-ssr process found"
+          EOF
       - name: Start Angular app on Raspberry Pi
         run: |
           # SSH into Raspberry Pi and restart the server or start the app
@@ -50,6 +57,6 @@ jobs:
             #sudo systemctl restart nginx  # Restart Nginx to serve the new version
 
             # Option 2: If you use Node.js directly (e.g., running with pm2)
-            sudo pm2 restart angular-ssr -f || pm2 start /home/pi/Documents/apps/client/server/server.mjs --node-args="--experimental-modules" --name angular-ssr
+            sudo pm2 start /home/pi/Documents/apps/client/server/server.mjs --node-args="--experimental-modules" --name angular-ssr
             
           EOF
