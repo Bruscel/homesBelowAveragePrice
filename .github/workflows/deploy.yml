@@ -50,14 +50,21 @@ jobs:
         run: |
           # SSH into Raspberry Pi and restart the server or start the app
           ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP }} << 'EOF'
+            # Check if any process is running on port 4000 (the app's port)
+            if lsof -Pi :4000 -sTCP:LISTEN -t > /dev/null ; then
+              echo "App is already running on port 4000. Restarting..."
+              # Kill the existing process running on port 4000
+              fuser -k 4000/tcp
+              sleep 2  # Wait for the process to stop
+            else
+              echo "No app running on port 4000. Starting the server..."
+            fi
+
             # Navigate to the app directory
-            cd /home/pi/Documents/apps/client
-            # Start the app using Nginx or any command you use to run the app
+            cd /home/pi/Documents/apps/client/server
 
-            # Option 1: Using Nginx (assuming it's set up to serve your Angular app)
-            #sudo systemctl restart nginx  # Restart Nginx to serve the new version
+            # Start the app using Node.js (without PM2)
+            nohup node server.mjs --experimental-modules &
 
-            # Option 2: If you use Node.js directly (e.g., running with pm2)
-            sudo pm2 start /home/pi/Documents/apps/client/server/server.mjs --node-args="--experimental-modules" --name angular-ssr
             
           EOF
