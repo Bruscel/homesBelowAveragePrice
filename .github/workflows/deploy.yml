@@ -42,7 +42,7 @@ jobs:
         run: |
           ssh -t pi@${{ secrets.RASPBERRY_PI_IP }} << 'EOF'
             # Stop and delete the existing angular-ssr process, if running
-            pm2 stop angular-ssr || echo "No existing angular-ssr process found"
+            #pm2 stop angular-ssr || echo "No existing angular-ssr process found"
             pm2 delete angular-ssr || echo "No existing angular-ssr process found"
           EOF
       - name: Start Angular app on Raspberry Pi
