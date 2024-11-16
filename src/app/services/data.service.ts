@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 export class DataService {
   //private apiUrl = 'https://localhost:7182/api/Items'; //Production API endpoint
 
-  private apiUrl = `${environment.apiUrl}/api/Items`; //Development API endpoint
+  private apiUrl = '/Items'; //Development API endpoint
   
   private httpOptions = {
     headers: new HttpHeaders({
