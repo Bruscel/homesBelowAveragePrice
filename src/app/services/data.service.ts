@@ -3,13 +3,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Item } from '../models/item.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   //private apiUrl = 'https://localhost:7182/api/Items'; //Production API endpoint
-  private apiUrl = `/api/Items?timestamp=${new Date().getTime()}`; //Development API endpoint
+
+  private apiUrl = `${environment.apiUrl}/api/Items`; //Development API endpoint
   
   private httpOptions = {
     headers: new HttpHeaders({
