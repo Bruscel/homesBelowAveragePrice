@@ -46,25 +46,15 @@ jobs:
             pm2 delete angular-ssr || echo "No existing angular-ssr process found"
             pm2 save || true
           EOF
-      - name: Start Angular app on Raspberry Pi
-        run: |
-          # SSH into Raspberry Pi and restart the server or start the app
-          ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP }} << 'EOF'
-            # Check if any process is running on port 4000 (the app's port)
-            if lsof -Pi :4000 -sTCP:LISTEN -t > /dev/null ; then
-              echo "App is already running on port 4000. Restarting..."
-              # Kill the existing process running on port 4000
-              fuser -k 4000/tcp
-              sleep 2  # Wait for the process to stop
-            else
-              echo "No app running on port 4000. Starting the server..."
-            fi
 
+      - name: Start Angular app on Raspberry Pi using PM2
+        run: |
+          # SSH into Raspberry Pi and restart the app using PM2
+          ssh -o StrictHostKeyChecking=no pi@${{ secrets.RASPBERRY_PI_IP }} << 'EOF'
             # Navigate to the app directory
             cd /home/pi/Documents/apps/client/server
 
-            # Start the app using Node.js (without PM2)
-            node server.mjs --experimental-modules &
-
-            
+            # Start the app using PM2
+            pm2 start server.mjs --name angular-ssr --experimental-modules
+            pm2 save
           EOF
